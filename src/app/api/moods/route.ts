@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { MoodEntry } from "@prisma/client";
 
-const moodToNumber = {
+type MoodEntry = {
+  id: string;
+  userId: string;
+  mood: "HAPPY" | "EXCITED" | "NEUTRAL" | "TIRED" | "SAD";
+  note: string | null;
+  date: Date;
+};
+
+const moodToEmoji: Record<MoodEntry["mood"], string> = {
   HAPPY: "😊",
   EXCITED: "😃",
   NEUTRAL: "😐",
@@ -20,7 +27,7 @@ export const GET = async () => {
 
     const formattedMoods = moods.map((m: MoodEntry) => ({
       id: m.id,
-      mood: moodToNumber[m.mood] || 3,
+      mood: moodToEmoji[m.mood] || "😐",
       note: m.note,
       date: m.date.toISOString().split("T")[0], // YYYY-MM-DD
     }));
