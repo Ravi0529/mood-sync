@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
 const moodToNumber = {
-  HAPPY: "Happy 😊",
-  EXCITED: "Excited 😃",
-  NEUTRAL: "Neutral 😐",
-  TIRED: "Tired 😪",
-  SAD: "Sad 😢",
+  HAPPY: "😊",
+  EXCITED: "😃",
+  NEUTRAL: "😐",
+  TIRED: "😪",
+  SAD: "😢",
 };
 
 export const GET = async () => {
@@ -56,6 +56,60 @@ export const POST = async (req: NextRequest) => {
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to create mood entry" },
+      { status: 500 }
+    );
+  }
+};
+
+export const PUT = async (req: NextRequest) => {
+  try {
+    const { id, mood, note } = await req.json();
+
+    if (!id || !mood) {
+      return NextResponse.json(
+        { error: "ID and Mood are required" },
+        { status: 400 }
+      );
+    }
+
+    const updatedMood = await prisma.moodEntry.update({
+      where: { id },
+      data: {
+        mood,
+        note,
+      },
+    });
+
+    return NextResponse.json(updatedMood, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to update mood entry" },
+      { status: 500 }
+    );
+  }
+};
+
+export const DELETE = async (req: NextRequest) => {
+  try {
+    const { id } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ error: "Missing Mood ID" }, { status: 400 });
+    }
+
+    await prisma.moodEntry.delete({
+      where: {
+        id,
+      },
+    });
+
+    return NextResponse.json(
+      { message: "Mood deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to delete mood entry" },
       { status: 500 }
     );
   }
