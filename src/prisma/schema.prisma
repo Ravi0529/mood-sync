@@ -19,11 +19,19 @@ model User {
   moods MoodEntry[]
 }
 
+enum MoodType {
+  HAPPY
+  EXCITED
+  NEUTRAL
+  TIRED
+  SAD
+}
+
 model MoodEntry {
   id     String   @id @default(uuid())
-  mood   String
+  mood   MoodType
   note   String?
   date   DateTime @default(now())
   userId String
-  user   User     @relation(fields: [userId], references: [id])
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
