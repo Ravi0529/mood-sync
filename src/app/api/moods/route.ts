@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-const moodToNumber: Record<string, number> = {
-  HAPPY: 5,
-  EXCITED: 4,
-  NEUTRAL: 3,
-  TIRED: 2,
-  SAD: 1,
+const moodToNumber = {
+  HAPPY: "Happy 😊",
+  EXCITED: "Excited 😃",
+  NEUTRAL: "Neutral 😐",
+  TIRED: "Tired 😪",
+  SAD: "Sad 😢",
 };
 
 export const GET = async () => {
@@ -33,7 +33,7 @@ export const GET = async () => {
   }
 };
 
-export const POST = async (req: Request) => {
+export const POST = async (req: NextRequest) => {
   try {
     const { userId, mood, note } = await req.json();
 
