@@ -66,11 +66,21 @@ export default function MoodForm({ userId }: { userId: string }) {
     setEditingMood(moodEntry);
     setMood(moodEntry.mood);
     setNote(moodEntry.note);
+    setMoods(moods.filter((m) => m.id !== moodEntry.id));
+  };
+
+  const cancelEdit = () => {
+    if (editingMood) {
+      setMoods((prevMoods) => [...prevMoods, editingMood]);
+    }
+    setEditingMood(null);
+    setMood("");
+    setNote("");
   };
 
   const deleteMood = async (id: string) => {
     if (!confirm("Are you sure you want to delete this mood entry?")) return;
-    
+
     setIsSubmitting(true);
     try {
       await fetch(`/api/moods`, {
@@ -116,37 +126,59 @@ export default function MoodForm({ userId }: { userId: string }) {
             disabled={isSubmitting}
           />
 
-          <button
-            onClick={submitMood}
-            disabled={isSubmitting}
-            className="w-full px-4 py-3 text-white font-medium rounded-lg
-                     bg-gradient-to-r from-purple-500 to-pink-500 
-                     hover:from-purple-600 hover:to-pink-600
-                     focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50
-                     transform transition-all duration-200 hover:scale-[1.02]
-                     disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? (
-              <div className="flex items-center justify-center space-x-2">
-                <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
-                <span>Saving...</span>
-              </div>
-            ) : (
-              editingMood ? "Update Mood" : "Save Mood"
+          <div className="flex gap-3">
+            <button
+              onClick={submitMood}
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-3 text-white font-medium rounded-lg
+                       bg-gradient-to-r from-purple-500 to-pink-500 
+                       hover:from-purple-600 hover:to-pink-600
+                       focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50
+                       transform transition-all duration-200 hover:scale-[1.02]
+                       disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
+                  <span>Saving...</span>
+                </div>
+              ) : editingMood ? (
+                "Update Mood"
+              ) : (
+                "Save Mood"
+              )}
+            </button>
+
+            {editingMood && (
+              <button
+                onClick={cancelEdit}
+                disabled={isSubmitting}
+                className="px-4 py-3 text-purple-600 font-medium rounded-lg
+                         border-2 border-purple-200 hover:border-purple-300
+                         focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50
+                         transform transition-all duration-200 hover:scale-[1.02]
+                         disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
             )}
-          </button>
+          </div>
         </div>
       </div>
 
       <div className="bg-white/50 rounded-xl p-6 shadow-md backdrop-blur-sm">
-        <h2 className="text-xl font-semibold mb-4 text-purple-700">Your Mood History</h2>
-        
+        <h2 className="text-xl font-semibold mb-4 text-purple-700">
+          Your Mood History
+        </h2>
+
         {isLoading ? (
           <div className="flex justify-center py-8">
             <div className="w-8 h-8 border-t-2 border-b-2 border-purple-500 rounded-full animate-spin"></div>
           </div>
         ) : moods.length === 0 ? (
-          <p className="text-center text-gray-600 py-4">No moods recorded yet. Start by logging your first mood!</p>
+          <p className="text-center text-gray-600 py-4">
+            No moods recorded yet. Start by logging your first mood!
+          </p>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {moods.map((m) => (
@@ -160,7 +192,9 @@ export default function MoodForm({ userId }: { userId: string }) {
                     {new Date(m.date).toLocaleDateString()}
                   </div>
                 </div>
-                <p className="text-gray-700 mb-3 text-sm">{m.note || "(No note added)"}</p>
+                <p className="text-gray-700 mb-3 text-sm">
+                  {m.note || "(No note added)"}
+                </p>
                 <div className="flex space-x-2 text-sm">
                   <button
                     onClick={() => editMood(m)}

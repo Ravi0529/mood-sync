@@ -22,7 +22,7 @@ export default function Dashboard() {
       }
     };
     checkUser();
-  }, []);
+  }, [router]);
 
   if (isLoading) {
     return (
