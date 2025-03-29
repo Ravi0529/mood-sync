@@ -25,9 +25,10 @@ export const GET = async () => {
     }));
 
     return NextResponse.json(formattedMoods, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error("Error fetching moods:", error);
     return NextResponse.json(
-      { error: "Failed to fetch moods", status: error.status || 500 },
+      { error: "Failed to fetch moods", status: 500 },
       { status: 500 }
     );
   }
@@ -53,7 +54,8 @@ export const POST = async (req: NextRequest) => {
     });
 
     return NextResponse.json(newMood, { status: 201 });
-  } catch (error) {
+  } catch (error: unknown) {
+    console.error("Error creating mood:", error);
     return NextResponse.json(
       { error: "Failed to create mood entry" },
       { status: 500 }
@@ -81,7 +83,8 @@ export const PUT = async (req: NextRequest) => {
     });
 
     return NextResponse.json(updatedMood, { status: 200 });
-  } catch (error) {
+  } catch (error: unknown) {
+    console.error("Error updating mood:", error);
     return NextResponse.json(
       { error: "Failed to update mood entry" },
       { status: 500 }
@@ -107,7 +110,8 @@ export const DELETE = async (req: NextRequest) => {
       { message: "Mood deleted successfully" },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
+    console.error("Error deleting mood:", error);
     return NextResponse.json(
       { error: "Failed to delete mood entry" },
       { status: 500 }

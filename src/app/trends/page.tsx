@@ -37,7 +37,7 @@ export default function Trends() {
         const response = await fetch("/api/moods");
         const data = await response.json();
 
-        const formattedData = data.map((entry: any) => ({
+        const formattedData = data.map((entry: MoodEntry) => ({
           ...entry,
           mood: moodToNumber[entry.mood] || 3,
         }));

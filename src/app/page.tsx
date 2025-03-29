@@ -27,6 +27,7 @@ export default function Home() {
       localStorage.setItem("userId", user.id);
       router.push("/dashboard");
     } catch (error) {
+      console.error("Error creating user:", error);
       alert("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
