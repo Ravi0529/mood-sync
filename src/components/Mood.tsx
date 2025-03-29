@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 interface Mood {
   id: string;
@@ -101,6 +102,10 @@ export default function MoodForm({ userId }: { userId: string }) {
             </div>
           </div>
         ))}
+      </div>
+
+      <div>
+        <Link href="/trends" className="bg-amber-700 p-2 cursor-pointer">Moniter Your Mood</Link>
       </div>
     </section>
   );
